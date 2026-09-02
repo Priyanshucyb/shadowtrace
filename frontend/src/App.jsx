@@ -7,6 +7,8 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   
   // Real initial audit history (dynamic counter base)
   const [auditHistory, setAuditHistory] = useState([
@@ -25,7 +27,7 @@ export default function App() {
     formData.append('asset', file);
 
     try {
-      const response = await fetch('http://localhost:5000/api/scan', {
+      const response = await fetch(`${API_BASE_URL}/api/scan`, {
         method: 'POST',
         body: formData,
       });
@@ -70,10 +72,14 @@ export default function App() {
   });
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#060913', color: '#fff', display: 'flex', fontFamily: 'system-ui, sans-serif', overflowX: 'hidden' }}>
+    <div className="app-shell" style={{ minHeight: '100vh', backgroundColor: '#060913', color: '#fff', display: 'flex', fontFamily: 'system-ui, sans-serif', overflowX: 'hidden' }}>
       
+      {/* Mobile menu button */}
+      <button className="mobile-menu-button" type="button" aria-label="Open navigation menu" onClick={() => setMobileMenuOpen(true)}>☰</button>
+      {mobileMenuOpen && <button className="mobile-overlay" aria-label="Close navigation menu" onClick={() => setMobileMenuOpen(false)} />}
+
       {/* Sidebar Navigation */}
-      <aside style={{ width: '260px', borderRight: '1px solid #1f2937', background: '#090D18', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh' }}>
+      <aside className={`sidebar ${mobileMenuOpen ? 'sidebar-open' : ''}`} style={{ width: '260px', borderRight: '1px solid #1f2937', background: '#090D18', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '2.5rem' }}>
             <div style={{ padding: '8px', background: 'rgba(20, 184, 166, 0.1)', border: '1px solid rgba(20, 184, 166, 0.3)', borderRadius: '12px' }}>🛡️</div>
@@ -84,11 +90,11 @@ export default function App() {
           </div>
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.9rem' }}>
-            <div onClick={() => setActiveTab('matrix')} style={navItemStyle('matrix')}>📊 Threat Matrix</div>
-            <div onClick={() => setActiveTab('telemetry')} style={navItemStyle('telemetry')}>⚡ Telemetry Feed</div>
-            <div onClick={() => setActiveTab('nodes')} style={navItemStyle('nodes')}>🌍 Global Nodes</div>
-            <div onClick={() => setActiveTab('vault')} style={navItemStyle('vault')}>🗄️ Asset Vault</div>
-            <div onClick={() => setActiveTab('configs')} style={navItemStyle('configs')}>⚙️ Configurations</div>
+            <div onClick={() => { setActiveTab('matrix'); setMobileMenuOpen(false); }} style={navItemStyle('matrix')}>📊 Threat Matrix</div>
+            <div onClick={() => { setActiveTab('telemetry'); setMobileMenuOpen(false); }} style={navItemStyle('telemetry')}>⚡ Telemetry Feed</div>
+            <div onClick={() => { setActiveTab('nodes'); setMobileMenuOpen(false); }} style={navItemStyle('nodes')}>🌍 Global Nodes</div>
+            <div onClick={() => { setActiveTab('vault'); setMobileMenuOpen(false); }} style={navItemStyle('vault')}>🗄️ Asset Vault</div>
+            <div onClick={() => { setActiveTab('configs'); setMobileMenuOpen(false); }} style={navItemStyle('configs')}>⚙️ Configurations</div>
           </nav>
         </div>
 
@@ -99,9 +105,9 @@ export default function App() {
       </aside>
 
       {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '2.5rem', overflowY: 'auto', maxHeight: '100vh' }}>
+      <main className="main-content" style={{ flex: 1, padding: '2.5rem', overflowY: 'auto', maxHeight: '100vh' }}>
         
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #1f2937', paddingBottom: '1.5rem', marginBottom: '2rem' }}>
+        <header className="top-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #1f2937', paddingBottom: '1.5rem', marginBottom: '2rem' }}>
           <div>
             <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: '0 0 4px 0' }}>Cyber Intelligence Command Center</h1>
             <p style={{ fontSize: '0.85rem', color: '#9ca3af', margin: 0 }}>Real-time metadata footprint extraction, asset auditing, and darknet threat scoring.</p>
@@ -119,7 +125,7 @@ export default function App() {
         {activeTab === 'matrix' && (
           <>
             {/* REAL-TIME DYNAMIC METRIC CARDS */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div className="metrics-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
               <div style={{ background: 'rgba(17, 24, 39, 0.6)', border: '1px solid #1f2937', padding: '1.25rem', borderRadius: '1rem' }}>
                 <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '6px' }}>Total Scanned Assets</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: '900', color: '#fff' }}>{totalScanned}</div>
@@ -142,7 +148,7 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr', gap: '2rem', marginBottom: '2rem' }}>
+            <div className="scanner-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr', gap: '2rem', marginBottom: '2rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                 <div style={{ background: 'rgba(17, 24, 39, 0.6)', border: '1px solid #1f2937', padding: '2rem', borderRadius: '1rem' }}>
                   <h2 style={{ fontSize: '1.1rem', color: '#2dd4bf', marginTop: 0, marginBottom: '0.5rem' }}>Digital Asset Ingestion & Deep Scanner</h2>
@@ -204,7 +210,7 @@ export default function App() {
         {activeTab === 'nodes' && (
           <div style={{ background: 'rgba(17, 24, 39, 0.6)', border: '1px solid #1f2937', padding: '2rem', borderRadius: '1rem' }}>
             <h2 style={{ color: '#2dd4bf', marginTop: 0 }}>Global OSINT Node Infrastructure</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginTop: '1.5rem' }}>
+            <div className="nodes-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginTop: '1.5rem' }}>
               <div style={{ background: '#030712', padding: '1.25rem', borderRadius: '0.75rem', border: '1px solid #1f2937' }}>
                 <div style={{ color: '#34d399', fontWeight: 'bold' }}>🟢 US-EAST-01</div>
                 <div style={{ fontSize: '0.8rem', color: '#9ca3af', marginTop: '4px' }}>Latency: 12ms | Status: Optimal</div>

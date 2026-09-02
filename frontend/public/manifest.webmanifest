@@ -1,0 +1,15 @@
+{
+  "name": "ShadowTrace — OSINT Digital Footprint Auditor",
+  "short_name": "ShadowTrace",
+  "description": "Cybersecurity-focused digital footprint and OSINT auditing dashboard.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#060913",
+  "theme_color": "#060913",
+  "icons": [
+    { "src": "/icons.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "/favicon.svg", "sizes": "48x46", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
