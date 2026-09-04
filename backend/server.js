@@ -96,4 +96,15 @@ app.post('/api/scan', upload.single('asset'), async (req, res) => {
   }
 });
 
-app.listen(5000, () => console.log('ShadowTrace Engine running smoothly on port 5000 (Standalone Mode)'));
+const PORT = process.env.PORT || 5000;
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    ok: true,
+    service: 'ShadowTrace Engine'
+  });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`ShadowTrace Engine running on port ${PORT}`);
+});
